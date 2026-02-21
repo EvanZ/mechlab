@@ -1,0 +1,26 @@
+{
+  "name": "mechlab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "expr-eval": "^2.0.2",
+    "katex": "^0.16.28",
+    "vue": "^3.5.18"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0",
+    "vitest": "^3.0.5",
+    "vue-tsc": "^2.2.0"
+  }
+}
