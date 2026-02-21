@@ -1,10 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_ROOT="/var/www/mechlab"
+APP_ROOT="${APP_ROOT:-/var/www/mechlab}"
+INSTALL_DEPS="${INSTALL_DEPS:-1}"
 
-echo "[1/4] Installing dependencies..."
-npm ci
+if [[ ! -f package.json ]]; then
+  echo "Run this script from the mechlab project root (where package.json exists)." >&2
+  exit 1
+fi
+
+if [[ "$INSTALL_DEPS" == "1" ]]; then
+  echo "[1/4] Installing dependencies..."
+  npm ci
+else
+  echo "[1/4] Skipping dependency install (INSTALL_DEPS=$INSTALL_DEPS)"
+fi
 
 echo "[2/4] Building production bundle..."
 npm run build
