@@ -13,6 +13,7 @@ import PlotPanel from "../components/plots/PlotPanel.vue";
 import RawPlotPanel from "../components/plots/RawPlotPanel.vue";
 import BrachistochroneViz from "../components/viz/BrachistochroneViz.vue";
 import BlochSphereViz from "../components/viz/BlochSphereViz.vue";
+import BrownianViz from "../components/viz/BrownianViz.vue";
 import CartPoleViz from "../components/viz/CartPoleViz.vue";
 import ChargedParticleViz from "../components/viz/ChargedParticleViz.vue";
 import DoubleWellTunnelingViz from "../components/viz/DoubleWellTunnelingViz.vue";
@@ -24,6 +25,7 @@ import FluidParticleViz from "../components/viz/FluidParticleViz.vue";
 import OrbitViz from "../components/viz/OrbitViz.vue";
 import OscillatorViz from "../components/viz/OscillatorViz.vue";
 import PendulumViz from "../components/viz/PendulumViz.vue";
+import PercolationViz from "../components/viz/PercolationViz.vue";
 import Potential1DViz from "../components/viz/Potential1DViz.vue";
 import ProjectileViz from "../components/viz/ProjectileViz.vue";
 import QftLatticeViz from "../components/viz/QftLatticeViz.vue";
@@ -32,9 +34,11 @@ import TightBindingViz from "../components/viz/TightBindingViz.vue";
 import Tunneling1DViz from "../components/viz/Tunneling1DViz.vue";
 import TwoQubitViz from "../components/viz/TwoQubitViz.vue";
 import QuantumHarmonicViz from "../components/viz/QuantumHarmonicViz.vue";
+import QuantumBrownianViz from "../components/viz/QuantumBrownianViz.vue";
 import Schrodinger1DViz from "../components/viz/Schrodinger1DViz.vue";
 import SkiJumpViz from "../components/viz/SkiJumpViz.vue";
 import MuscleActivationViz from "../components/viz/MuscleActivationViz.vue";
+import NavierStokes2DViz from "../components/viz/NavierStokes2DViz.vue";
 import PatchyBindingViz from "../components/viz/PatchyBindingViz.vue";
 import Wave2DViz from "../components/viz/Wave2DViz.vue";
 import type {
@@ -58,11 +62,20 @@ import {
   setActivePotentialExpression
 } from "../systems/ode/potentialExpression";
 import { buildBlochSphereInitialState } from "../systems/ode/blochsphere";
+import {
+  buildBrownianInitialState,
+  simulateBrownianTrajectory
+} from "../systems/ode/brownian";
 import { buildDoubleWellInitialState } from "../systems/ode/doublewell";
 import { buildDoubleSlitInitialState } from "../systems/ode/doubleslit";
 import { buildDoubleSlit2dInitialState } from "../systems/ode/doubleslit2d";
 import { buildQftLatticeInitialState } from "../systems/ode/qftlattice";
 import { buildQhoInitialState } from "../systems/ode/qho1d";
+import { buildPercolationInitialState } from "../systems/ode/percolation";
+import {
+  buildNavierStokesInitialState,
+  simulateNavierStokes2d
+} from "../systems/ode/navierstokes2d";
 import { buildRutherfordInitialState } from "../systems/ode/rutherford";
 import { buildSchrodingerInitialState } from "../systems/ode/schrodinger1d";
 import { buildTightBindingInitialState } from "../systems/ode/tightbinding";
@@ -140,6 +153,9 @@ const isTunneling1d = computed(() => activeOdeSystem.value?.id === "tunneling1d"
 const isDoubleWell = computed(() => activeOdeSystem.value?.id === "doublewell");
 const isRutherford = computed(() => activeOdeSystem.value?.id === "rutherford");
 const isWave2d = computed(() => activeOdeSystem.value?.id === "wave2d");
+const isBrownian = computed(() => activeOdeSystem.value?.id === "brownian");
+const isPercolation = computed(() => activeOdeSystem.value?.id === "percolation");
+const isNavierStokes2d = computed(() => activeOdeSystem.value?.id === "navierstokes2d");
 const isDoubleSlit = computed(() => activeOdeSystem.value?.id === "doubleslit");
 const isDoubleSlit2d = computed(() => activeOdeSystem.value?.id === "doubleslit2d");
 const isTightBinding = computed(() => activeOdeSystem.value?.id === "tightbinding");
@@ -158,7 +174,15 @@ const isGeneratedQuantumState = computed(
     isQftLattice.value ||
     isQho1d.value
 );
-const hasGeneratedState = computed(() => isGeneratedQuantumState.value || isRutherford.value || isWave2d.value);
+const hasGeneratedState = computed(
+  () =>
+    isGeneratedQuantumState.value ||
+    isRutherford.value ||
+    isWave2d.value ||
+    isBrownian.value ||
+    isPercolation.value ||
+    isNavierStokes2d.value
+);
 const isSkiJump = computed(() => activeOdeSystem.value?.id === "skijump");
 const isMuscleActivation = computed(() => activeOdeSystem.value?.id === "muscleactivation");
 
@@ -254,6 +278,18 @@ function buildGeneratedInitialState(
     return buildRutherfordInitialState(nextParams);
   }
 
+  if (systemId === "brownian") {
+    return buildBrownianInitialState(nextParams);
+  }
+
+  if (systemId === "percolation") {
+    return buildPercolationInitialState(nextParams);
+  }
+
+  if (systemId === "navierstokes2d") {
+    return buildNavierStokesInitialState(nextParams);
+  }
+
   if (systemId === "wave2d") {
     return buildWave2dInitialState(nextParams);
   }
@@ -304,18 +340,37 @@ function buildOdePreview(system: OdeSystem): CarouselPreviewMap[string] {
 
   const dtPreview = durationForPreview / steps;
 
-  const { y } = integrateRk4(system.rhs, {
-    t0: 0,
-    y0: y0ForPreview,
-    dt: dtPreview,
-    steps,
-    params: paramsForPreview
-  });
+  const simulatedY =
+    system.id === "brownian"
+      ? simulateBrownianTrajectory({
+          t0: 0,
+          y0: y0ForPreview,
+          dt: dtPreview,
+          steps,
+          params: paramsForPreview
+        }).y
+      : system.id === "percolation"
+        ? [buildPercolationInitialState(paramsForPreview)]
+      : system.id === "navierstokes2d"
+        ? simulateNavierStokes2d({
+            t0: 0,
+            y0: y0ForPreview,
+            dt: dtPreview,
+            steps: Math.min(10, steps),
+            params: paramsForPreview
+          }).y
+      : integrateRk4(system.rhs, {
+          t0: 0,
+          y0: y0ForPreview,
+          dt: dtPreview,
+          steps,
+          params: paramsForPreview
+        }).y;
 
   return {
     kind: "ode",
-    states: y,
-    index: Math.max(0, y.length - 1),
+    states: simulatedY,
+    index: Math.max(0, simulatedY.length - 1),
     params: paramsForPreview,
     expression: system.id === "potential1d" ? getActivePotentialExpression() : undefined,
     hillProfile:
@@ -449,6 +504,18 @@ const vectorFieldConfig = computed<VectorFieldConfig | null>(() => {
       vectorDerivativeYIndex: 1,
       trajectoryX: stateSeries(0),
       trajectoryY: stateSeries(1)
+    };
+  }
+
+  if (activeOdeSystem.value.id === "quantumbrownian" && activePlot.value.id === "mean-phase") {
+    return {
+      coordStateXIndex: 0,
+      coordStateYIndex: 1,
+      vectorDerivativeXIndex: 0,
+      vectorDerivativeYIndex: 1,
+      trajectoryX: stateSeries(0),
+      trajectoryY: stateSeries(1),
+      titleSuffix: "Mean Drift Field"
     };
   }
 
@@ -1381,6 +1448,13 @@ function onPresetChange(event: Event): void {
           :params="params"
         />
 
+        <QuantumBrownianViz
+          v-else-if="activeOdeSystem?.vizSpec.type === 'quantumbrownian'"
+          :states="statesForViz"
+          :index="currentIndex"
+          :params="params"
+        />
+
         <MuscleActivationViz
           v-else-if="activeOdeSystem?.vizSpec.type === 'muscleactivation'"
           :states="statesForViz"
@@ -1441,10 +1515,31 @@ function onPresetChange(event: Event): void {
           :params="params"
         />
 
+        <PercolationViz
+          v-else-if="activeOdeSystem?.vizSpec.type === 'percolation'"
+          :states="statesForViz"
+          :index="currentIndex"
+          :params="params"
+        />
+
+        <NavierStokes2DViz
+          v-else-if="activeOdeSystem?.vizSpec.type === 'navierstokes2d'"
+          :states="statesForViz"
+          :index="currentIndex"
+          :params="params"
+        />
+
         <FluidParticleViz
           v-else-if="activeOdeSystem?.vizSpec.type === 'fluidparticle'"
           :states="statesForViz"
           :index="currentIndex"
+        />
+
+        <BrownianViz
+          v-else-if="activeOdeSystem?.vizSpec.type === 'brownian'"
+          :states="statesForViz"
+          :index="currentIndex"
+          :params="params"
         />
 
         <CartPoleViz

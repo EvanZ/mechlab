@@ -91,6 +91,11 @@ const cardThemes: Record<string, CardTheme> = {
     subtitle: "Quantum Oscillator",
     background: "linear-gradient(135deg, #f1ecff, #d8ccff)"
   },
+  quantumbrownian: {
+    badge: "QBM",
+    subtitle: "Open Quantum Bath",
+    background: "linear-gradient(135deg, #f4eeff, #dccdff)"
+  },
   muscleactivation: {
     badge: "MUS",
     subtitle: "Active Spring",
@@ -136,10 +141,25 @@ const cardThemes: Record<string, CardTheme> = {
     subtitle: "Vector Field",
     background: "linear-gradient(135deg, #ebfff6, #c0ead5)"
   },
+  percolation: {
+    badge: "PERC",
+    subtitle: "Critical Clusters",
+    background: "linear-gradient(135deg, #eef7ff, #cedef5)"
+  },
+  navierstokes2d: {
+    badge: "NS",
+    subtitle: "Obstacle Flow",
+    background: "linear-gradient(135deg, #eff8ff, #c8deef)"
+  },
   fluidparticle: {
     badge: "FLD",
     subtitle: "Drag/Buoyancy",
     background: "linear-gradient(135deg, #eafcff, #c7efff)"
+  },
+  brownian: {
+    badge: "BRN",
+    subtitle: "Thermal Jitter",
+    background: "linear-gradient(135deg, #eef8ff, #cfe8ff)"
   },
   cartpole: {
     badge: "CP",

@@ -163,6 +163,13 @@ export const paramHelpBySystemId: Record<string, Record<string, string>> = {
     phi1: "Relative phase (radians) applied to the first excited component.",
     phi2: "Relative phase (radians) applied to the second excited component."
   },
+  quantumbrownian: {
+    m: "Effective oscillator mass.",
+    omega: "Oscillator frequency of the confining potential.",
+    gamma: "System-bath damping rate. Larger gamma means stronger friction and faster relaxation.",
+    kT: "Bath thermal energy scale. Higher kT injects more momentum noise.",
+    hbar: "Quantum scale setting the minimum uncertainty floor."
+  },
   muscleactivation: {
     m: "Effective moving mass attached to the muscle. Bigger mass is harder to move quickly.",
     fMax: "Maximum active muscle force when activation is fully on and length is ideal.",
@@ -249,6 +256,30 @@ export const paramHelpBySystemId: Record<string, Record<string, string>> = {
     vortexStrength: "How strongly the flow spins around the center.",
     coreRadius: "Softens the center singularity. Bigger core makes center behavior smoother."
   },
+  navierstokes2d: {
+    gridX: "Horizontal grid resolution for the fluid solver.",
+    gridY: "Vertical grid resolution for the fluid solver.",
+    xMin: "Left boundary of the simulation domain.",
+    xMax: "Right boundary of the simulation domain.",
+    yMin: "Bottom boundary of the simulation domain.",
+    yMax: "Top boundary of the simulation domain.",
+    nu: "Kinematic viscosity. Smaller values produce sharper, more unstable wakes.",
+    inflowU: "Inlet speed on the left boundary.",
+    obstacleX: "Obstacle center x-position.",
+    obstacleY: "Obstacle center y-position.",
+    obstacleR: "Obstacle radius.",
+    obstacleSoft: "Small padding around the obstacle mask for numerical robustness.",
+    pressureIters: "How many pressure-solve iterations are used each step."
+  },
+  percolation: {
+    gridSize: "Lattice size N for an N x N grid.",
+    pOcc: "Site occupation probability p. Near p ~ 0.5927 in 2D, spanning behavior changes rapidly.",
+    trials: "How many random lattices are averaged at each scan p-value.",
+    scanMin: "Smallest p used in the scan curve.",
+    scanMax: "Largest p used in the scan curve.",
+    scanPoints: "Number of p samples between scanMin and scanMax.",
+    seed: "Random seed. Same seed reproduces the same random lattices."
+  },
   fluidparticle: {
     g: "Gravity strength.",
     mu: "Fluid viscosity (thickness). Higher mu means stronger sticky drag.",
@@ -256,6 +287,15 @@ export const paramHelpBySystemId: Record<string, Record<string, string>> = {
     rhoParticle: "Density of the particle itself.",
     radius: "Particle size. Larger particles have more area and volume, changing drag and buoyancy.",
     cd: "Drag coefficient for shape-dependent inertial drag."
+  },
+  brownian: {
+    x0: "Starting x-position of the particle.",
+    y0: "Starting y-position of the particle.",
+    D: "Diffusion strength. Higher D means stronger random jitter and faster spread.",
+    driftX: "Constant drift push in the x-direction (like a weak flow).",
+    driftY: "Constant drift push in the y-direction.",
+    trapK: "Centering force strength toward the origin. Bigger values pull the particle back more.",
+    seed: "Random seed. Same seed reproduces the same random path."
   },
   cartpole: {
     mCart: "Mass of the cart base.",

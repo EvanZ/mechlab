@@ -3,6 +3,7 @@ import { computed } from "vue";
 import type { CarouselPreview } from "../../systems/carouselPreview";
 import BrachistochroneViz from "../viz/BrachistochroneViz.vue";
 import BlochSphereViz from "../viz/BlochSphereViz.vue";
+import BrownianViz from "../viz/BrownianViz.vue";
 import CartPoleViz from "../viz/CartPoleViz.vue";
 import ChargedParticleViz from "../viz/ChargedParticleViz.vue";
 import DoubleWellTunnelingViz from "../viz/DoubleWellTunnelingViz.vue";
@@ -11,13 +12,16 @@ import DoubleSlit2DViz from "../viz/DoubleSlit2DViz.vue";
 import DoublePendulumViz from "../viz/DoublePendulumViz.vue";
 import FlowFieldViz from "../viz/FlowFieldViz.vue";
 import FluidParticleViz from "../viz/FluidParticleViz.vue";
+import NavierStokes2DViz from "../viz/NavierStokes2DViz.vue";
 import OrbitViz from "../viz/OrbitViz.vue";
 import OscillatorViz from "../viz/OscillatorViz.vue";
 import PendulumViz from "../viz/PendulumViz.vue";
+import PercolationViz from "../viz/PercolationViz.vue";
 import Potential1DViz from "../viz/Potential1DViz.vue";
 import ProjectileViz from "../viz/ProjectileViz.vue";
 import QftLatticeViz from "../viz/QftLatticeViz.vue";
 import QuantumHarmonicViz from "../viz/QuantumHarmonicViz.vue";
+import QuantumBrownianViz from "../viz/QuantumBrownianViz.vue";
 import RutherfordViz from "../viz/RutherfordViz.vue";
 import Schrodinger1DViz from "../viz/Schrodinger1DViz.vue";
 import SkiJumpViz from "../viz/SkiJumpViz.vue";
@@ -162,6 +166,13 @@ const effectiveL2 = computed(() => {
         :params="params"
       />
 
+      <QuantumBrownianViz
+        v-else-if="systemId === 'quantumbrownian'"
+        :states="states"
+        :index="index"
+        :params="params"
+      />
+
       <MuscleActivationViz
         v-else-if="systemId === 'muscleactivation'"
         :states="states"
@@ -222,10 +233,31 @@ const effectiveL2 = computed(() => {
         :params="params"
       />
 
+      <PercolationViz
+        v-else-if="systemId === 'percolation'"
+        :states="states"
+        :index="index"
+        :params="params"
+      />
+
+      <NavierStokes2DViz
+        v-else-if="systemId === 'navierstokes2d'"
+        :states="states"
+        :index="index"
+        :params="params"
+      />
+
       <FluidParticleViz
         v-else-if="systemId === 'fluidparticle'"
         :states="states"
         :index="index"
+      />
+
+      <BrownianViz
+        v-else-if="systemId === 'brownian'"
+        :states="states"
+        :index="index"
+        :params="params"
       />
 
       <CartPoleViz

@@ -4,6 +4,9 @@ import { computeDerivedSeries, computeEnergySeries } from "./energy";
 import { integrateRk4, integrateVelocityVerlet } from "./integrators";
 import type { WorkerRequest, WorkerResponse } from "./protocol";
 import { getOdeSystemById, getVariationalSystemById } from "../systems/systems";
+import { simulateBrownianTrajectory } from "../systems/ode/brownian";
+import { simulateNavierStokes2d } from "../systems/ode/navierstokes2d";
+import { simulatePercolationExperiment } from "../systems/ode/percolation";
 import { setActivePotentialExpression } from "../systems/ode/potentialExpression";
 import {
   hillProfileFromTuples,
@@ -58,8 +61,36 @@ ctx.onmessage = (event: MessageEvent<WorkerRequest>) => {
 
       let t: number[];
       let y: number[][];
+      let derivedOverride: Record<string, number[]> | undefined;
 
-      if (request.integrator === "rk4") {
+      if (system.id === "brownian") {
+        ({ t, y } = simulateBrownianTrajectory({
+          t0: request.t0,
+          y0: request.y0,
+          dt: request.dt,
+          steps: request.steps,
+          params: request.params
+        }));
+      } else if (system.id === "navierstokes2d") {
+        ({ t, y } = simulateNavierStokes2d({
+          t0: request.t0,
+          y0: request.y0,
+          dt: request.dt,
+          steps: request.steps,
+          params: request.params
+        }));
+      } else if (system.id === "percolation") {
+        const result = simulatePercolationExperiment({
+          t0: request.t0,
+          y0: request.y0,
+          dt: request.dt,
+          steps: request.steps,
+          params: request.params
+        });
+        t = result.t;
+        y = result.y;
+        derivedOverride = result.derived;
+      } else if (request.integrator === "rk4") {
         ({ t, y } = integrateRk4(system.rhs, {
           t0: request.t0,
           y0: request.y0,
@@ -82,7 +113,7 @@ ctx.onmessage = (event: MessageEvent<WorkerRequest>) => {
         t,
         y,
         energy: computeEnergySeries(y, request.params, system.energy),
-        derived: computeDerivedSeries(y, request.params, system.derived)
+        derived: derivedOverride ?? computeDerivedSeries(y, request.params, system.derived)
       });
       return;
     }

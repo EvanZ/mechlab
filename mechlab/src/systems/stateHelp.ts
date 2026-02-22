@@ -11,6 +11,13 @@ export const stateHelpBySystemId: Record<string, Record<string, string>> = {
     x: "Current particle position on the x-axis.",
     v: "Current particle speed along x."
   },
+  quantumbrownian: {
+    xMean: "Mean quantum position <x> of the oscillator wavepacket.",
+    pMean: "Mean momentum <p> of the oscillator wavepacket.",
+    Vxx: "Position variance (spread squared in x).",
+    Vpp: "Momentum variance (spread squared in p).",
+    Vxp: "Position-momentum covariance (tilt of the uncertainty ellipse)."
+  },
   muscleactivation: {
     l: "Current normalized muscle length.",
     v: "How fast muscle length is changing.",

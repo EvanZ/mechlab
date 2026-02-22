@@ -32,6 +32,7 @@ export interface VizSpec {
     | "tightbinding"
     | "qftlattice"
     | "qho1d"
+    | "quantumbrownian"
     | "chargedparticle"
     | "projectile"
     | "orbit"
@@ -39,7 +40,10 @@ export interface VizSpec {
     | "patchybinding"
     | "wave2d"
     | "flowfield"
+    | "percolation"
+    | "navierstokes2d"
     | "fluidparticle"
+    | "brownian"
     | "cartpole"
     | "doublependulum"
     | "brachistochrone";

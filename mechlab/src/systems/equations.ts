@@ -1145,6 +1145,60 @@ export const equationsBySystemId: Record<string, EquationSpec> = {
       }
     }
   },
+  navierstokes2d: {
+    subtitle: "2D incompressible Navier-Stokes flow around a circular obstacle",
+    preferredFramework: "newtonian",
+    frameworks: {
+      newtonian: {
+        sections: [
+          {
+            title: "Momentum + Incompressibility",
+            lines: [
+              "\\partial_t\\mathbf{u}+(\\mathbf{u}\\cdot\\nabla)\\mathbf{u}=-\\nabla p+\\nu\\nabla^2\\mathbf{u}",
+              "\\nabla\\cdot\\mathbf{u}=0"
+            ]
+          },
+          {
+            title: "Boundary Conditions (Demo)",
+            lines: [
+              "\\mathbf{u}=\\mathbf{u}_{\\mathrm{in}}\\text{ on inlet},\\quad \\partial_x\\mathbf{u}\\approx 0\\text{ on outlet}",
+              "\\mathbf{u}=0\\text{ on obstacle and top/bottom walls (no-slip)}"
+            ]
+          }
+        ]
+      },
+      lagrangian: {
+        sections: [
+          {
+            title: "Rayleigh-Dissipative Form",
+            lines: [
+              "\\rho\\left(\\partial_t\\mathbf{u}+(\\mathbf{u}\\cdot\\nabla)\\mathbf{u}\\right)=-\\nabla p+\\mu\\nabla^2\\mathbf{u}",
+              "\\nu=\\mu/\\rho"
+            ]
+          }
+        ],
+        footnote: "Viscous dissipation breaks a purely conservative Lagrangian description."
+      },
+      hamiltonian: {
+        sections: [
+          {
+            title: "Projection Method Used Numerically",
+            lines: [
+              "\\mathbf{u}^*=\\mathbf{u}^n+\\Delta t\\,\\mathcal{N}(\\mathbf{u}^n)",
+              "\\nabla^2 p^{n+1}=\\frac{1}{\\Delta t}\\nabla\\cdot\\mathbf{u}^*",
+              "\\mathbf{u}^{n+1}=\\mathbf{u}^*-\\Delta t\\,\\nabla p^{n+1}"
+            ]
+          },
+          {
+            title: "Key Non-Dimensional Group",
+            lines: [
+              "Re=\\frac{U D}{\\nu}\\quad\\text{(controls wake regime and vortex shedding tendency)}"
+            ]
+          }
+        ]
+      }
+    }
+  },
   fluidparticle: {
     subtitle: "Particle through fluid with buoyancy + viscous/inertial drag",
     frameworks: {
@@ -1200,6 +1254,168 @@ export const equationsBySystemId: Record<string, EquationSpec> = {
           }
         ],
         footnote: "With drag, phase-space flow is dissipative (not purely Hamiltonian)."
+      }
+    }
+  },
+  brownian: {
+    subtitle: "Classical 2D Brownian particle with drift and optional harmonic trap",
+    preferredFramework: "newtonian",
+    frameworks: {
+      newtonian: {
+        sections: [
+          {
+            title: "Overdamped Langevin SDE",
+            lines: [
+              "\\dot{x}=u_x-k_{\\mathrm{trap}}x+\\sqrt{2D}\\,\\xi_x(t)",
+              "\\dot{y}=u_y-k_{\\mathrm{trap}}y+\\sqrt{2D}\\,\\xi_y(t)",
+              "\\langle\\xi_i(t)\\rangle=0,\\quad \\langle\\xi_i(t)\\xi_j(t')\\rangle=\\delta_{ij}\\delta(t-t')"
+            ]
+          },
+          {
+            title: "Free-Diffusion Moment (u=0, k_trap=0)",
+            lines: ["\\langle r^2(t)\\rangle = 4Dt\\quad\\text{in 2D}"]
+          }
+        ]
+      },
+      lagrangian: {
+        sections: [
+          {
+            title: "Onsager-Machlup Path Functional",
+            lines: [
+              "\\mathcal{P}[x,y]\\propto e^{-S_{OM}}",
+              "S_{OM}=\\frac{1}{4D}\\int\\!\\left[(\\dot{x}-u_x+k_{\\mathrm{trap}}x)^2+(\\dot{y}-u_y+k_{\\mathrm{trap}}y)^2\\right]dt"
+            ]
+          }
+        ],
+        footnote: "Brownian motion is stochastic and dissipative, so it is described by a path probability/action rather than a standard deterministic Lagrangian."
+      },
+      hamiltonian: {
+        sections: [
+          {
+            title: "Fokker-Planck Equation",
+            lines: [
+              "\\partial_t P=-\\nabla\\cdot\\!\\left[(\\mathbf{u}-k_{\\mathrm{trap}}\\mathbf{r})P\\right]+D\\nabla^2P"
+            ]
+          },
+          {
+            title: "MSRJD/Stochastic Hamiltonian Generator",
+            lines: [
+              "H(\\mathbf{r},\\mathbf{p})=\\mathbf{p}\\cdot(\\mathbf{u}-k_{\\mathrm{trap}}\\mathbf{r})+D\\,\\|\\mathbf{p}\\|^2"
+            ]
+          }
+        ],
+        footnote: "This Hamiltonian is for probability-path evolution (generator formalism), not a conservative mechanical energy."
+      }
+    }
+  },
+  percolation: {
+    subtitle: "2D site percolation on a square lattice (top-bottom spanning)",
+    preferredFramework: "newtonian",
+    frameworks: {
+      newtonian: {
+        sections: [
+          {
+            title: "Microscopic Rule",
+            lines: [
+              "n_i\\in\\{0,1\\},\\quad \\mathbb{P}(n_i=1)=p",
+              "\\text{Neighbors are connected if }n_i=n_j=1\\text{ on nearest-neighbor bonds}"
+            ]
+          },
+          {
+            title: "Order Parameters",
+            lines: [
+              "P_{\\mathrm{span}}(p,L)=\\mathbb{P}(\\text{a cluster spans top to bottom})",
+              "s_{\\max}/N=\\text{largest cluster fraction}"
+            ]
+          }
+        ],
+        footnote: "This demo is static/discrete disorder sampling rather than continuous-time mechanics."
+      },
+      lagrangian: {
+        sections: [
+          {
+            title: "Free-Energy Scaling Form",
+            lines: [
+              "f_{\\mathrm{sing}}(p)\\sim |p-p_c|^{2-\\alpha}",
+              "\\xi(p)\\sim |p-p_c|^{-\\nu},\\quad P_\\infty(p)\\sim (p-p_c)^\\beta\\;\\;(p>p_c)"
+            ]
+          }
+        ],
+        footnote: "Percolation criticality can be described by continuum field theories and scaling exponents."
+      },
+      hamiltonian: {
+        sections: [
+          {
+            title: "Fortuin-Kasteleyn / Potts Mapping",
+            lines: [
+              "Z_{\\mathrm{Potts}}(q,v)=\\sum_{G'\\subseteq G} q^{k(G')} v^{b(G')}",
+              "\\text{Percolation is recovered in the }q\\to 1\\text{ limit}"
+            ]
+          },
+          {
+            title: "Finite-Size Crossing",
+            lines: [
+              "P_{\\mathrm{span}}(p,L)\\approx \\Phi\\!\\left((p-p_c)L^{1/\\nu}\\right)"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  quantumbrownian: {
+    subtitle: "Open quantum harmonic oscillator with damping and thermal diffusion",
+    preferredFramework: "hamiltonian",
+    frameworks: {
+      newtonian: {
+        sections: [
+          {
+            title: "Mean Dynamics",
+            lines: [
+              "\\frac{d\\langle x\\rangle}{dt}=\\frac{\\langle p\\rangle}{m}",
+              "\\frac{d\\langle p\\rangle}{dt}=-m\\omega^2\\langle x\\rangle-\\gamma\\langle p\\rangle"
+            ]
+          },
+          {
+            title: "Covariance Dynamics",
+            lines: [
+              "\\dot{V}_{xx}=\\frac{2}{m}V_{xp}+2D_{xx}",
+              "\\dot{V}_{pp}=-2m\\omega^2V_{xp}-2\\gamma V_{pp}+2D_{pp}",
+              "\\dot{V}_{xp}=\\frac{1}{m}V_{pp}-m\\omega^2V_{xx}-\\gamma V_{xp}"
+            ]
+          }
+        ],
+        footnote: "These are deterministic moment equations for a Gaussian open quantum state."
+      },
+      lagrangian: {
+        sections: [
+          {
+            title: "Effective Action (Open System)",
+            lines: [
+              "S_{\\mathrm{eff}}[x_+,x_-]=S_0[x_+]-S_0[x_-]+S_{\\mathrm{diss}}+S_{\\mathrm{noise}}",
+              "S_{\\mathrm{diss}}\\sim\\gamma\\int dt\\,x_-(t)\\dot{x}_+(t),\\quad S_{\\mathrm{noise}}\\sim i\\int dt\\,x_-(t)D x_-(t)"
+            ]
+          }
+        ],
+        footnote: "Integrating out the bath yields non-local dissipation/noise terms (influence functional)."
+      },
+      hamiltonian: {
+        sections: [
+          {
+            title: "Caldeira-Leggett-Type Master Equation",
+            lines: [
+              "\\dot{\\rho}=-\\frac{i}{\\hbar}[H_0,\\rho]-\\frac{i\\gamma}{2\\hbar}[x,\\{p,\\rho\\}]-\\frac{D_{pp}}{\\hbar^2}[x,[x,\\rho]]-\\frac{D_{xx}}{\\hbar^2}[p,[p,\\rho]]",
+              "H_0=\\frac{p^2}{2m}+\\frac12 m\\omega^2x^2"
+            ]
+          },
+          {
+            title: "Uncertainty Bound",
+            lines: [
+              "\\det V = V_{xx}V_{pp}-V_{xp}^2\\ge \\frac{\\hbar^2}{4}",
+              "\\mu=\\frac{\\hbar}{2\\sqrt{\\det V}}\\quad\\text{(Gaussian purity)}"
+            ]
+          }
+        ],
+        footnote: "In this toy model D_pp drives thermalization while D_xx is a small positivity-preserving correction."
       }
     }
   },
