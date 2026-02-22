@@ -15,6 +15,7 @@ import BrachistochroneViz from "../components/viz/BrachistochroneViz.vue";
 import BlochSphereViz from "../components/viz/BlochSphereViz.vue";
 import CartPoleViz from "../components/viz/CartPoleViz.vue";
 import ChargedParticleViz from "../components/viz/ChargedParticleViz.vue";
+import DoubleWellTunnelingViz from "../components/viz/DoubleWellTunnelingViz.vue";
 import DoubleSlitViz from "../components/viz/DoubleSlitViz.vue";
 import DoubleSlit2DViz from "../components/viz/DoubleSlit2DViz.vue";
 import DoublePendulumViz from "../components/viz/DoublePendulumViz.vue";
@@ -26,6 +27,7 @@ import PendulumViz from "../components/viz/PendulumViz.vue";
 import Potential1DViz from "../components/viz/Potential1DViz.vue";
 import ProjectileViz from "../components/viz/ProjectileViz.vue";
 import QftLatticeViz from "../components/viz/QftLatticeViz.vue";
+import RutherfordViz from "../components/viz/RutherfordViz.vue";
 import TightBindingViz from "../components/viz/TightBindingViz.vue";
 import Tunneling1DViz from "../components/viz/Tunneling1DViz.vue";
 import TwoQubitViz from "../components/viz/TwoQubitViz.vue";
@@ -33,6 +35,8 @@ import QuantumHarmonicViz from "../components/viz/QuantumHarmonicViz.vue";
 import Schrodinger1DViz from "../components/viz/Schrodinger1DViz.vue";
 import SkiJumpViz from "../components/viz/SkiJumpViz.vue";
 import MuscleActivationViz from "../components/viz/MuscleActivationViz.vue";
+import PatchyBindingViz from "../components/viz/PatchyBindingViz.vue";
+import Wave2DViz from "../components/viz/Wave2DViz.vue";
 import type {
   IntegratorType,
   SimulateResult,
@@ -54,12 +58,15 @@ import {
   setActivePotentialExpression
 } from "../systems/ode/potentialExpression";
 import { buildBlochSphereInitialState } from "../systems/ode/blochsphere";
+import { buildDoubleWellInitialState } from "../systems/ode/doublewell";
 import { buildDoubleSlitInitialState } from "../systems/ode/doubleslit";
 import { buildDoubleSlit2dInitialState } from "../systems/ode/doubleslit2d";
 import { buildQftLatticeInitialState } from "../systems/ode/qftlattice";
 import { buildQhoInitialState } from "../systems/ode/qho1d";
+import { buildRutherfordInitialState } from "../systems/ode/rutherford";
 import { buildSchrodingerInitialState } from "../systems/ode/schrodinger1d";
 import { buildTightBindingInitialState } from "../systems/ode/tightbinding";
+import { buildWave2dInitialState } from "../systems/ode/wave2d";
 import {
   applyTwoQubitGate,
   buildBellPhiPlusState,
@@ -130,6 +137,9 @@ const isBlochSphere = computed(() => activeOdeSystem.value?.id === "blochsphere"
 const isTwoQubit = computed(() => activeOdeSystem.value?.id === "twoqubit");
 const isSchrodinger1d = computed(() => activeOdeSystem.value?.id === "schrodinger1d");
 const isTunneling1d = computed(() => activeOdeSystem.value?.id === "tunneling1d");
+const isDoubleWell = computed(() => activeOdeSystem.value?.id === "doublewell");
+const isRutherford = computed(() => activeOdeSystem.value?.id === "rutherford");
+const isWave2d = computed(() => activeOdeSystem.value?.id === "wave2d");
 const isDoubleSlit = computed(() => activeOdeSystem.value?.id === "doubleslit");
 const isDoubleSlit2d = computed(() => activeOdeSystem.value?.id === "doubleslit2d");
 const isTightBinding = computed(() => activeOdeSystem.value?.id === "tightbinding");
@@ -141,12 +151,14 @@ const isGeneratedQuantumState = computed(
     isTwoQubit.value ||
     isSchrodinger1d.value ||
     isTunneling1d.value ||
+    isDoubleWell.value ||
     isDoubleSlit.value ||
     isDoubleSlit2d.value ||
     isTightBinding.value ||
     isQftLattice.value ||
     isQho1d.value
 );
+const hasGeneratedState = computed(() => isGeneratedQuantumState.value || isRutherford.value || isWave2d.value);
 const isSkiJump = computed(() => activeOdeSystem.value?.id === "skijump");
 const isMuscleActivation = computed(() => activeOdeSystem.value?.id === "muscleactivation");
 
@@ -211,11 +223,10 @@ const twoQubitGateButtons: Array<{ gate: TwoQubitGate; label: string }> = [
 
 const quantumRoadmapPlaceholders = [
   "RG Flow Visualizer (QFT Toy)",
-  "Quantum Tunneling in Double-Well Potentials",
   "Topological Phase Toy Model"
 ] as const;
 
-function buildGeneratedQuantumInitialState(
+function buildGeneratedInitialState(
   systemId: string,
   nextParams: Record<string, number>
 ): number[] | null {
@@ -233,6 +244,18 @@ function buildGeneratedQuantumInitialState(
 
   if (systemId === "tunneling1d") {
     return buildTunnelingInitialState(nextParams);
+  }
+
+  if (systemId === "doublewell") {
+    return buildDoubleWellInitialState(nextParams);
+  }
+
+  if (systemId === "rutherford") {
+    return buildRutherfordInitialState(nextParams);
+  }
+
+  if (systemId === "wave2d") {
+    return buildWave2dInitialState(nextParams);
   }
 
   if (systemId === "doubleslit") {
@@ -267,12 +290,18 @@ function previewStepsForStateLength(stateLength: number): number {
 function buildOdePreview(system: OdeSystem): CarouselPreviewMap[string] {
   const paramsForPreview = { ...system.params };
   const defaultY0 =
-    buildGeneratedQuantumInitialState(system.id, paramsForPreview) ?? [...system.state.y0];
+    buildGeneratedInitialState(system.id, paramsForPreview) ?? [...system.state.y0];
   const y0ForPreview = defaultY0.length > 0 ? defaultY0 : [...system.state.y0];
 
   const durationDefault = system.simulationDefaults?.duration ?? 20;
-  const durationForPreview = Math.max(0.3, Math.min(durationDefault, 4));
-  const steps = previewStepsForStateLength(y0ForPreview.length);
+  let durationForPreview = Math.max(0.3, Math.min(durationDefault, 4));
+  let steps = previewStepsForStateLength(y0ForPreview.length);
+
+  if (system.id === "wave2d") {
+    durationForPreview = Math.max(0.3, Math.min(durationDefault, 1.2));
+    steps = 32;
+  }
+
   const dtPreview = durationForPreview / steps;
 
   const { y } = integrateRk4(system.rhs, {
@@ -346,7 +375,7 @@ const activePlot = computed(() => {
 
 const activeParamHelp = computed(() => getParamHelpForSystem(activeSystem.value?.id ?? null));
 const activeStateHelp = computed(() => getStateHelpForSystem(activeSystem.value?.id ?? null));
-const showIcEditor = computed(() => Boolean(activeOdeSystem.value && !isGeneratedQuantumState.value));
+const showIcEditor = computed(() => Boolean(activeOdeSystem.value && !hasGeneratedState.value));
 
 const stateAtIndex = computed(() => {
   if (!simulation.value) {
@@ -471,6 +500,30 @@ const vectorFieldConfig = computed<VectorFieldConfig | null>(() => {
     };
   }
 
+  if (activeOdeSystem.value.id === "rutherford" && activePlot.value.id === "trajectory") {
+    return {
+      coordStateXIndex: 0,
+      coordStateYIndex: 1,
+      vectorDerivativeXIndex: 2,
+      vectorDerivativeYIndex: 3,
+      trajectoryX: stateSeries(0),
+      trajectoryY: stateSeries(1),
+      titleSuffix: "Acceleration Field"
+    };
+  }
+
+  if (activeOdeSystem.value.id === "patchybinding" && activePlot.value.id === "trajectory") {
+    return {
+      coordStateXIndex: 0,
+      coordStateYIndex: 1,
+      vectorDerivativeXIndex: 6,
+      vectorDerivativeYIndex: 7,
+      trajectoryX: stateSeries(0),
+      trajectoryY: stateSeries(1),
+      titleSuffix: "Acceleration Field"
+    };
+  }
+
   return null;
 });
 
@@ -561,7 +614,7 @@ watch(
       } else {
         potentialExpressionError.value = "";
       }
-      const generatedY0 = buildGeneratedQuantumInitialState(system.id, params.value);
+      const generatedY0 = buildGeneratedInitialState(system.id, params.value);
       if (generatedY0) {
         y0.value = generatedY0;
       }
@@ -618,14 +671,14 @@ watch(
 watch(
   params,
   () => {
-    if (!isGeneratedQuantumState.value) {
+    if (!hasGeneratedState.value) {
       return;
     }
     const activeId = activeOdeSystem.value?.id;
     if (!activeId) {
       return;
     }
-    const generatedY0 = buildGeneratedQuantumInitialState(activeId, params.value);
+    const generatedY0 = buildGeneratedInitialState(activeId, params.value);
     if (generatedY0) {
       y0.value = generatedY0;
     }
@@ -801,10 +854,10 @@ function choosePreset(presetName: string): void {
     potentialExpression.value = preset.expression;
   }
 
-  if (isGeneratedQuantumState.value) {
+  if (hasGeneratedState.value) {
     const activeId = activeOdeSystem.value?.id;
     if (activeId) {
-      const generatedY0 = buildGeneratedQuantumInitialState(activeId, params.value);
+      const generatedY0 = buildGeneratedInitialState(activeId, params.value);
       if (generatedY0) {
         y0.value = generatedY0;
       }
@@ -1109,7 +1162,7 @@ function onPresetChange(event: Event): void {
       <section class="group" v-if="isGeneratedQuantumState">
         <h3>Quantum/QFT Placemarkers</h3>
         <p class="status">
-          Implemented: Bloch Sphere (single qubit), Two-Qubit Entanglement Playground, 1D Schrodinger wavepacket, Resonant Tunneling, 1D + 2D Double-Slit Interference, Tight-Binding Chain, QFT Lattice (1+1D), Quantum Harmonic Oscillator.
+          Implemented: Bloch Sphere (single qubit), Two-Qubit Entanglement Playground, 1D Schrodinger wavepacket, Resonant Tunneling, Quantum Double-Well Tunneling, 1D + 2D Double-Slit Interference, Tight-Binding Chain, QFT Lattice (1+1D), Quantum Harmonic Oscillator.
         </p>
         <p class="status">Planned demos for future milestones:</p>
         <ul class="roadmap-list">
@@ -1286,6 +1339,13 @@ function onPresetChange(event: Event): void {
           :params="params"
         />
 
+        <DoubleWellTunnelingViz
+          v-else-if="activeOdeSystem?.vizSpec.type === 'doublewell'"
+          :states="statesForViz"
+          :index="currentIndex"
+          :params="params"
+        />
+
         <DoubleSlitViz
           v-else-if="activeOdeSystem?.vizSpec.type === 'doubleslit'"
           :states="statesForViz"
@@ -1342,6 +1402,27 @@ function onPresetChange(event: Event): void {
 
         <ChargedParticleViz
           v-else-if="activeOdeSystem?.vizSpec.type === 'chargedparticle'"
+          :states="statesForViz"
+          :index="currentIndex"
+          :params="params"
+        />
+
+        <RutherfordViz
+          v-else-if="activeOdeSystem?.vizSpec.type === 'rutherford'"
+          :states="statesForViz"
+          :index="currentIndex"
+          :params="params"
+        />
+
+        <PatchyBindingViz
+          v-else-if="activeOdeSystem?.vizSpec.type === 'patchybinding'"
+          :states="statesForViz"
+          :index="currentIndex"
+          :params="params"
+        />
+
+        <Wave2DViz
+          v-else-if="activeOdeSystem?.vizSpec.type === 'wave2d'"
           :states="statesForViz"
           :index="currentIndex"
           :params="params"

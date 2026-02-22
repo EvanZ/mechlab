@@ -5,6 +5,7 @@ import BrachistochroneViz from "../viz/BrachistochroneViz.vue";
 import BlochSphereViz from "../viz/BlochSphereViz.vue";
 import CartPoleViz from "../viz/CartPoleViz.vue";
 import ChargedParticleViz from "../viz/ChargedParticleViz.vue";
+import DoubleWellTunnelingViz from "../viz/DoubleWellTunnelingViz.vue";
 import DoubleSlitViz from "../viz/DoubleSlitViz.vue";
 import DoubleSlit2DViz from "../viz/DoubleSlit2DViz.vue";
 import DoublePendulumViz from "../viz/DoublePendulumViz.vue";
@@ -17,12 +18,15 @@ import Potential1DViz from "../viz/Potential1DViz.vue";
 import ProjectileViz from "../viz/ProjectileViz.vue";
 import QftLatticeViz from "../viz/QftLatticeViz.vue";
 import QuantumHarmonicViz from "../viz/QuantumHarmonicViz.vue";
+import RutherfordViz from "../viz/RutherfordViz.vue";
 import Schrodinger1DViz from "../viz/Schrodinger1DViz.vue";
 import SkiJumpViz from "../viz/SkiJumpViz.vue";
 import MuscleActivationViz from "../viz/MuscleActivationViz.vue";
+import PatchyBindingViz from "../viz/PatchyBindingViz.vue";
 import TightBindingViz from "../viz/TightBindingViz.vue";
 import Tunneling1DViz from "../viz/Tunneling1DViz.vue";
 import TwoQubitViz from "../viz/TwoQubitViz.vue";
+import Wave2DViz from "../viz/Wave2DViz.vue";
 
 const props = defineProps<{
   systemId: string;
@@ -116,6 +120,13 @@ const effectiveL2 = computed(() => {
         :params="params"
       />
 
+      <DoubleWellTunnelingViz
+        v-else-if="systemId === 'doublewell'"
+        :states="states"
+        :index="index"
+        :params="params"
+      />
+
       <DoubleSlitViz
         v-else-if="systemId === 'doubleslit'"
         :states="states"
@@ -172,6 +183,27 @@ const effectiveL2 = computed(() => {
 
       <ChargedParticleViz
         v-else-if="systemId === 'chargedparticle'"
+        :states="states"
+        :index="index"
+        :params="params"
+      />
+
+      <RutherfordViz
+        v-else-if="systemId === 'rutherford'"
+        :states="states"
+        :index="index"
+        :params="params"
+      />
+
+      <PatchyBindingViz
+        v-else-if="systemId === 'patchybinding'"
+        :states="states"
+        :index="index"
+        :params="params"
+      />
+
+      <Wave2DViz
+        v-else-if="systemId === 'wave2d'"
         :states="states"
         :index="index"
         :params="params"

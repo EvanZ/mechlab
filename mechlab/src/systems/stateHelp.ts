@@ -26,6 +26,20 @@ export const stateHelpBySystemId: Record<string, Record<string, string>> = {
     vx: "Particle velocity in the x direction.",
     vy: "Particle velocity in the y direction."
   },
+  patchybinding: {
+    x1: "Protein 1 x-position.",
+    y1: "Protein 1 y-position.",
+    theta1: "Protein 1 patch orientation angle.",
+    x2: "Protein 2 x-position.",
+    y2: "Protein 2 y-position.",
+    theta2: "Protein 2 patch orientation angle.",
+    vx1: "Protein 1 velocity in x.",
+    vy1: "Protein 1 velocity in y.",
+    omega1: "Protein 1 angular velocity.",
+    vx2: "Protein 2 velocity in x.",
+    vy2: "Protein 2 velocity in y.",
+    omega2: "Protein 2 angular velocity."
+  },
   projectile: {
     x: "Current horizontal position.",
     y: "Current vertical position.",

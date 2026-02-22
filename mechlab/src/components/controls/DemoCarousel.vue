@@ -61,6 +61,11 @@ const cardThemes: Record<string, CardTheme> = {
     subtitle: "Barrier Passage",
     background: "linear-gradient(135deg, #e7f5ff, #b9dcff)"
   },
+  doublewell: {
+    badge: "DW",
+    subtitle: "L-R Tunneling",
+    background: "linear-gradient(135deg, #e9f2ff, #c7d9ff)"
+  },
   doubleslit: {
     badge: "DS1",
     subtitle: "Interference",
@@ -100,6 +105,21 @@ const cardThemes: Record<string, CardTheme> = {
     badge: "E-F",
     subtitle: "Charge Motion",
     background: "linear-gradient(135deg, #fff4e8, #ffddb9)"
+  },
+  rutherford: {
+    badge: "SCAT",
+    subtitle: "Collider Toy",
+    background: "linear-gradient(135deg, #fff1e5, #ffd0b2)"
+  },
+  patchybinding: {
+    badge: "PPI",
+    subtitle: "Patchy Binding",
+    background: "linear-gradient(135deg, #ffeede, #ffccb3)"
+  },
+  wave2d: {
+    badge: "WAVE",
+    subtitle: "Stone Drop",
+    background: "linear-gradient(135deg, #e8f7ff, #bfe4ff)"
   },
   projectile: {
     badge: "PROJ",

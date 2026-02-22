@@ -1,6 +1,7 @@
 import { cartPoleSystem } from "./ode/cartpole";
 import { blochSphereSystem } from "./ode/blochsphere";
 import { chargedParticleSystem } from "./ode/chargedparticle";
+import { doubleWellSystem } from "./ode/doublewell";
 import { doubleSlitSystem } from "./ode/doubleslit";
 import { doubleSlit2dSystem } from "./ode/doubleslit2d";
 import { doublePendulumSystem } from "./ode/doublependulum";
@@ -8,11 +9,14 @@ import { flowFieldSystem } from "./ode/flowfield";
 import { fluidParticleSystem } from "./ode/fluidparticle";
 import { pendulumSystem } from "./ode/pendulum";
 import { orbitSystem } from "./ode/orbit";
+import { rutherfordSystem } from "./ode/rutherford";
+import { patchyBindingSystem } from "./ode/patchybinding";
 import { oscillatorSystem } from "./ode/oscillator";
 import { potential1dSystem } from "./ode/potential1d";
 import { projectileSystem } from "./ode/projectile";
 import { qftLatticeSystem } from "./ode/qftlattice";
 import { qho1dSystem } from "./ode/qho1d";
+import { wave2dSystem } from "./ode/wave2d";
 import { muscleActivationSystem } from "./ode/muscleactivation";
 import { schrodinger1dSystem } from "./ode/schrodinger1d";
 import { skiJumpSystem } from "./ode/skijump";
@@ -30,6 +34,7 @@ const odeSystems: OdeSystem[] = [
   twoQubitSystem,
   schrodinger1dSystem,
   tunneling1dSystem,
+  doubleWellSystem,
   doubleSlitSystem,
   doubleSlit2dSystem,
   tightBindingSystem,
@@ -40,6 +45,9 @@ const odeSystems: OdeSystem[] = [
   chargedParticleSystem,
   projectileSystem,
   orbitSystem,
+  rutherfordSystem,
+  patchyBindingSystem,
+  wave2dSystem,
   flowFieldSystem,
   fluidParticleSystem,
   cartPoleSystem,

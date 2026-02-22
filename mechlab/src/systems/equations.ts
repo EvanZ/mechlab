@@ -381,6 +381,64 @@ export const equationsBySystemId: Record<string, EquationSpec> = {
       }
     }
   },
+  doublewell: {
+    subtitle: "Bound-state tunneling between two wells with coherent left-right population oscillations",
+    preferredFramework: "hamiltonian",
+    frameworks: {
+      newtonian: {
+        sections: [
+          {
+            title: "Classical Double-Well Contrast",
+            lines: [
+              "V(x)=V_b\\left(\\frac{x^2}{a^2}-1\\right)^2+\\epsilon x",
+              "m\\ddot{x}=-\\frac{dV}{dx}",
+              "E<V(0)\\Rightarrow \\text{classical particle stays in one well (no crossing).}"
+            ]
+          }
+        ]
+      },
+      lagrangian: {
+        sections: [
+          {
+            title: "Field Lagrangian Density",
+            lines: [
+              "\\mathcal{L}=\\frac{i\\hbar}{2}(\\psi^*\\partial_t\\psi-\\psi\\partial_t\\psi^*)-\\frac{\\hbar^2}{2m}|\\partial_x\\psi|^2-V(x)|\\psi|^2"
+            ]
+          },
+          {
+            title: "Two-Mode Effective Lagrangian (Intuition)",
+            lines: [
+              "L_{\\mathrm{eff}}=\\frac{i\\hbar}{2}\\sum_{j=L,R}(c_j^*\\dot{c}_j-\\dot{c}_j^*c_j)-\\left[-J(c_L^*c_R+c_R^*c_L)+\\frac{\\Delta}{2}(|c_L|^2-|c_R|^2)\\right]"
+            ]
+          }
+        ]
+      },
+      hamiltonian: {
+        sections: [
+          {
+            title: "Hamiltonian Operator",
+            lines: [
+              "\\hat{H}=-\\frac{\\hbar^2}{2m}\\partial_x^2+V(x),\\quad i\\hbar\\partial_t\\psi=\\hat{H}\\psi"
+            ]
+          },
+          {
+            title: "Two-Level Tunnel Model",
+            lines: [
+              "H_{\\mathrm{eff}}=\\begin{pmatrix}\\Delta/2 & -J \\\\ -J & -\\Delta/2\\end{pmatrix}",
+              "\\Delta=0\\Rightarrow P_L(t)=\\cos^2\\!\\left(\\frac{Jt}{\\hbar}\\right),\\quad P_R(t)=\\sin^2\\!\\left(\\frac{Jt}{\\hbar}\\right)"
+            ]
+          },
+          {
+            title: "Real/Imag Split Used in Solver",
+            lines: [
+              "\\dot{\\Re\\psi}= -\\frac{\\hbar}{2m}\\partial_x^2\\Im\\psi + \\frac{V(x)}{\\hbar}\\Im\\psi",
+              "\\dot{\\Im\\psi}= +\\frac{\\hbar}{2m}\\partial_x^2\\Re\\psi - \\frac{V(x)}{\\hbar}\\Re\\psi"
+            ]
+          }
+        ]
+      }
+    }
+  },
   tightbinding: {
     subtitle: "Discrete lattice hopping model for quantum transport",
     preferredFramework: "hamiltonian",
@@ -791,6 +849,177 @@ export const equationsBySystemId: Record<string, EquationSpec> = {
             ]
           }
         ]
+      }
+    }
+  },
+  rutherford: {
+    subtitle: "Classical Coulomb scattering of a projectile off a fixed nucleus",
+    preferredFramework: "newtonian",
+    frameworks: {
+      newtonian: {
+        sections: [
+          {
+            title: "Inverse-Square Central Force",
+            lines: [
+              "\\kappa = k_C q_{\\mathrm{proj}} q_{\\mathrm{tgt}}",
+              "m\\ddot{\\mathbf{r}}=\\kappa\\frac{\\mathbf{r}}{r^3},\\quad r=\\|\\mathbf{r}\\|",
+              "\\dot{x}=v_x,\\;\\dot{y}=v_y,\\;\\dot{v}_x=\\frac{\\kappa}{m}\\frac{x}{r^3},\\;\\dot{v}_y=\\frac{\\kappa}{m}\\frac{y}{r^3}"
+            ]
+          },
+          {
+            title: "Rutherford Deflection Law",
+            lines: [
+              "\\theta(b)=2\\arctan\\!\\left(\\frac{\\kappa}{m v_{\\infty}^2 b}\\right)",
+              "\\frac{d\\sigma}{d\\Omega}=\\left(\\frac{\\kappa}{2m v_{\\infty}^2}\\right)^2\\csc^4\\!\\left(\\frac{\\theta}{2}\\right)"
+            ]
+          }
+        ]
+      },
+      lagrangian: {
+        sections: [
+          {
+            title: "Planar Polar Lagrangian",
+            lines: [
+              "L(r,\\phi,\\dot{r},\\dot{\\phi})=\\frac12 m\\left(\\dot{r}^2+r^2\\dot{\\phi}^2\\right)-\\frac{\\kappa}{r}",
+              "\\frac{d}{dt}\\left(\\frac{\\partial L}{\\partial \\dot{r}}\\right)-\\frac{\\partial L}{\\partial r}=0,\\quad \\frac{d}{dt}\\left(\\frac{\\partial L}{\\partial \\dot{\\phi}}\\right)-\\frac{\\partial L}{\\partial \\phi}=0"
+            ]
+          },
+          {
+            title: "Conserved Quantities",
+            lines: [
+              "L_z=mr^2\\dot{\\phi}=\\text{const}",
+              "E=\\frac12 m\\left(\\dot{r}^2+r^2\\dot{\\phi}^2\\right)+\\frac{\\kappa}{r}=\\text{const}"
+            ]
+          }
+        ]
+      },
+      hamiltonian: {
+        sections: [
+          {
+            title: "Hamiltonian (Central Potential)",
+            lines: [
+              "p_r=m\\dot{r},\\quad p_{\\phi}=mr^2\\dot{\\phi}",
+              "H(r,p_r,p_{\\phi})=\\frac{p_r^2}{2m}+\\frac{p_{\\phi}^2}{2mr^2}+\\frac{\\kappa}{r}",
+              "\\dot{r}=\\frac{\\partial H}{\\partial p_r},\\;\\dot{\\phi}=\\frac{\\partial H}{\\partial p_{\\phi}},\\;\\dot{p}_{\\phi}=0"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  patchybinding: {
+    subtitle: "Coarse-grained protein-protein encounter with directional interface patches",
+    preferredFramework: "newtonian",
+    frameworks: {
+      newtonian: {
+        sections: [
+          {
+            title: "Two Mobile Rigid Bodies",
+            lines: [
+              "m_1\\ddot{\\mathbf{r}}_1=\\mathbf{F}_{12}-\\gamma_{v1}\\dot{\\mathbf{r}}_1,\\quad m_2\\ddot{\\mathbf{r}}_2=-\\mathbf{F}_{12}-\\gamma_{v2}\\dot{\\mathbf{r}}_2",
+              "I_1\\ddot{\\theta}_1=\\tau_1-\\gamma_{\\omega1}\\dot{\\theta}_1,\\quad I_2\\ddot{\\theta}_2=\\tau_2-\\gamma_{\\omega2}\\dot{\\theta}_2"
+            ]
+          },
+          {
+            title: "Patch-Gated Attraction",
+            lines: [
+              "g(r)=\\exp\\!\\left[-\\frac{(r-r_{\\mathrm{bind}})^2}{2\\sigma_{\\mathrm{bind}}^2}\\right]",
+              "S=(\\max(0,\\hat{u}_1\\cdot\\hat{r}))^n(\\max(0,\\hat{u}_2\\cdot(-\\hat{r})))^n",
+              "U_{\\mathrm{att}}(r,\\theta)=-k_{\\mathrm{att}}\\,S\\,g(r)"
+            ]
+          }
+        ],
+        footnote: "This is a toy patchy-particle model, not an atomistic force field."
+      },
+      lagrangian: {
+        sections: [
+          {
+            title: "Conservative Core",
+            lines: [
+              "L=\\sum_{i=1}^2\\left[\\frac12 m_i\\|\\dot{\\mathbf{r}}_i\\|^2+\\frac12 I_i\\dot{\\theta}_i^2\\right]-U_{\\mathrm{rep}}(r)-U_{\\mathrm{att}}(r,\\theta_1,\\theta_2)"
+            ]
+          },
+          {
+            title: "Rayleigh Dissipation",
+            lines: [
+              "\\mathcal{R}=\\sum_{i=1}^2\\left[\\frac12\\gamma_{vi}\\|\\dot{\\mathbf{r}}_i\\|^2+\\frac12\\gamma_{\\omega i}\\dot{\\theta}_i^2\\right]",
+              "\\frac{d}{dt}\\frac{\\partial L}{\\partial \\dot{q}_i}-\\frac{\\partial L}{\\partial q_i}+\\frac{\\partial \\mathcal{R}}{\\partial \\dot{q}_i}=0"
+            ]
+          }
+        ]
+      },
+      hamiltonian: {
+        sections: [
+          {
+            title: "Canonical Coordinates (Conservative Part)",
+            lines: [
+              "\\mathbf{p}_i=m_i\\dot{\\mathbf{r}}_i,\\quad p_{\\theta i}=I_i\\dot{\\theta}_i",
+              "H=\\sum_{i=1}^2\\left[\\frac{\\|\\mathbf{p}_i\\|^2}{2m_i}+\\frac{p_{\\theta i}^2}{2I_i}\\right]+U_{\\mathrm{rep}}(r)+U_{\\mathrm{att}}(r,\\theta_1,\\theta_2)"
+            ]
+          },
+          {
+            title: "With Dissipation",
+            lines: [
+              "\\dot{\\mathbf{p}}_i=-\\nabla_{\\mathbf{r}_i}H-\\gamma_{vi}\\dot{\\mathbf{r}}_i",
+              "\\dot{p}_{\\theta i}=-\\frac{\\partial H}{\\partial \\theta_i}-\\gamma_{\\omega i}\\dot{\\theta}_i"
+            ]
+          }
+        ],
+        footnote: "Damping terms make the full dynamics non-Hamiltonian."
+      }
+    }
+  },
+  wave2d: {
+    subtitle: "Classical 2D wave equation for surface ripples after a stone drop",
+    preferredFramework: "newtonian",
+    frameworks: {
+      newtonian: {
+        sections: [
+          {
+            title: "Wave PDE",
+            lines: [
+              "\\partial_t^2 h = c_w^2\\nabla^2 h - \\eta\\,\\partial_t h",
+              "h_t = v,\\quad v_t = c_w^2\\nabla^2 h - \\eta v"
+            ]
+          },
+          {
+            title: "Discrete Update Used in Demo",
+            lines: [
+              "\\dot{h}_{ij}=v_{ij}",
+              "\\dot{v}_{ij}=c_w^2\\,\\Delta_h h_{ij}-(\\eta+\\eta_{\\mathrm{edge}}w_{ij})v_{ij}"
+            ]
+          }
+        ]
+      },
+      lagrangian: {
+        sections: [
+          {
+            title: "Conservative Surface-Wave Lagrangian",
+            lines: [
+              "\\mathcal{L}=\\frac12(\\partial_t h)^2-\\frac{c_w^2}{2}|\\nabla h|^2",
+              "\\frac{\\partial \\mathcal{L}}{\\partial h}-\\partial_t\\frac{\\partial \\mathcal{L}}{\\partial (\\partial_t h)}-\\nabla\\cdot\\frac{\\partial \\mathcal{L}}{\\partial (\\nabla h)}=0 \\Rightarrow h_{tt}-c_w^2\\nabla^2 h=0"
+            ]
+          },
+          {
+            title: "Damping (Non-Conservative Term)",
+            lines: [
+              "\\mathcal{R}=\\frac12\\eta (\\partial_t h)^2,\\quad h_{tt}-c_w^2\\nabla^2 h+\\eta h_t=0"
+            ]
+          }
+        ],
+        footnote: "The damping terms are added phenomenologically to mimic viscous energy loss."
+      },
+      hamiltonian: {
+        sections: [
+          {
+            title: "Canonical Field Form",
+            lines: [
+              "\\pi = \\partial_t h,\\quad H=\\int\\!\\left[\\frac12\\pi^2+\\frac{c_w^2}{2}|\\nabla h|^2\\right]dA",
+              "\\partial_t h = \\frac{\\delta H}{\\delta \\pi},\\quad \\partial_t \\pi = -\\frac{\\delta H}{\\delta h}"
+            ]
+          }
+        ],
+        footnote: "With damping enabled, energy decreases over time so the flow is not strictly Hamiltonian."
       }
     }
   },

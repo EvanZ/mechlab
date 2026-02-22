@@ -70,6 +70,19 @@ export const paramHelpBySystemId: Record<string, Record<string, string>> = {
     scanEmax: "Maximum energy for the transmission scan curve.",
     scanPoints: "Number of sampled energies in the transmission scan."
   },
+  doublewell: {
+    m: "Effective mass in the double-well Schrodinger model.",
+    hbar: "Reduced Planck constant scaling phase evolution and tunneling timescale.",
+    gridPoints: "Number of x-samples. More points mean smoother wave and potential curves but slower runtime.",
+    xMin: "Left edge of the 1D domain.",
+    xMax: "Right edge of the 1D domain.",
+    wellSeparation: "Distance between the two well minima. Larger separation usually weakens tunneling.",
+    barrierHeight: "Height of the central barrier at x=0. Higher barrier means slower tunneling.",
+    tilt: "Linear bias that makes one well lower than the other (breaks symmetry).",
+    packetSigma: "Initial wavepacket width in each well.",
+    packetK0: "Initial wave number (momentum-like kick) of the packet.",
+    startInRight: "0 starts in the left well, 1 starts in the right well."
+  },
   tightbinding: {
     sites: "Number of lattice sites in the chain.",
     hop: "Nearest-neighbor hopping strength. Bigger hop makes faster spreading.",
@@ -175,6 +188,53 @@ export const paramHelpBySystemId: Record<string, Record<string, string>> = {
       "Strength of a point-like electric source at the center. Positive pushes outward, negative pulls inward.",
     coreRadius:
       "Softens the center singularity so the field stays finite near the origin."
+  },
+  rutherford: {
+    m: "Mass of the incoming projectile particle.",
+    qProj: "Charge of the projectile.",
+    qTarget: "Charge of the fixed target nucleus at the origin.",
+    kC: "Coulomb constant scale. Larger values mean stronger scattering force.",
+    coreRadius:
+      "Small softening radius to avoid infinite force exactly at the origin.",
+    xStart: "Initial x-position where the projectile starts (usually negative, from the left).",
+    impactParam:
+      "Impact parameter b: vertical offset of the incoming beam from the target center.",
+    beamSpeed: "Incoming beam speed before the close approach."
+  },
+  patchybinding: {
+    m1: "Mass of protein 1.",
+    m2: "Mass of protein 2.",
+    I1: "Rotational inertia of protein 1.",
+    I2: "Rotational inertia of protein 2.",
+    drag1: "Translational drag on protein 1 from surrounding fluid.",
+    drag2: "Translational drag on protein 2 from surrounding fluid.",
+    rotDrag1: "Rotational drag that slows spinning of protein 1.",
+    rotDrag2: "Rotational drag that slows spinning of protein 2.",
+    kRep: "Short-range steric repulsion strength preventing overlap.",
+    kAttr: "Attractive binding-well strength when patches face each other.",
+    bindRadius: "Preferred center-to-center distance at the binding interface.",
+    bindWidth: "How tight the binding distance preference is.",
+    kTorque: "How strongly both proteins rotate to align their interface patches.",
+    patchSharpness: "How strict orientation matching is. Larger means more selective binding.",
+    coreRadius1: "Effective hard-core radius of protein 1.",
+    coreRadius2: "Effective hard-core radius of protein 2."
+  },
+  wave2d: {
+    gridX: "Number of horizontal cells in the water surface grid.",
+    gridY: "Number of vertical cells in the water surface grid.",
+    xMin: "Left boundary of the simulated lake patch.",
+    xMax: "Right boundary of the simulated lake patch.",
+    yMin: "Bottom boundary of the simulated lake patch.",
+    yMax: "Top boundary of the simulated lake patch.",
+    cWave: "Wave propagation speed across the surface.",
+    damping: "Global damping that slowly removes wave energy everywhere.",
+    edgeDamping: "Extra damping near boundaries to absorb outgoing waves and reduce reflections.",
+    periodic: "Boundary mode: 1 wraps edges, 0 uses fixed-edge basin walls.",
+    dropX0: "Horizontal stone-drop location.",
+    dropY0: "Vertical stone-drop location.",
+    dropSigma: "Size of the initial splash footprint.",
+    dropAmp: "Initial height displacement at the splash center.",
+    dropV0: "Initial vertical speed impulse of the splash."
   },
   projectile: {
     g: "Gravity strength pulling the projectile downward."
