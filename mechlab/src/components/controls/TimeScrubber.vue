@@ -184,8 +184,8 @@ function onDialKeydown(event: KeyboardEvent): void {
   width: 62px;
   height: 62px;
   border-radius: 999px;
-  background: #ffffff;
-  border: 1px solid #dfe8f5;
+  background: #060a12;
+  border: 1px solid #1f2a3f;
 }
 
 .center {
