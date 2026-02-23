@@ -36,6 +36,11 @@ const cardThemes: Record<string, CardTheme> = {
     subtitle: "Hooke Dynamics",
     background: "linear-gradient(135deg, #eaf8f0, #bfe7cf)"
   },
+  drivendampedoscillator: {
+    badge: "DDS",
+    subtitle: "Driven Damping",
+    background: "linear-gradient(135deg, #e6f8ef, #bddfcf)"
+  },
   potential1d: {
     badge: "V(x)",
     subtitle: "Free-form Force",

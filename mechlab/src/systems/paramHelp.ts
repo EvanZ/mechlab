@@ -7,6 +7,14 @@ export const paramHelpBySystemId: Record<string, Record<string, string>> = {
     m: "How heavy the mass is. Heavier mass changes speed more slowly.",
     k: "How stiff the spring is. Bigger k means a stronger pull back to center."
   },
+  drivendampedoscillator: {
+    m: "Mass attached to the spring.",
+    k: "Spring stiffness.",
+    c: "Damping strength. Bigger c removes motion faster.",
+    F0: "Drive force amplitude. Bigger values push harder.",
+    omegaDrive: "Drive angular frequency. Near the natural frequency gives large response.",
+    phiDrive: "Drive phase offset at t = 0."
+  },
   potential1d: {
     m: "How heavy the particle is. Heavier means less acceleration from the same force.",
     gradStep:

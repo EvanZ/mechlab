@@ -88,6 +88,12 @@ const effectiveL2 = computed(() => {
         :series-x="oscillatorSeriesX"
       />
 
+      <OscillatorViz
+        v-else-if="systemId === 'drivendampedoscillator'"
+        :x="states[index]?.[0] ?? 0"
+        :series-x="oscillatorSeriesX"
+      />
+
       <Potential1DViz
         v-else-if="systemId === 'potential1d'"
         :states="states"

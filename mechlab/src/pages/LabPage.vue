@@ -493,6 +493,7 @@ const vectorFieldConfig = computed<VectorFieldConfig | null>(() => {
   if (
     (activeOdeSystem.value.id === "pendulum" ||
       activeOdeSystem.value.id === "oscillator" ||
+      activeOdeSystem.value.id === "drivendampedoscillator" ||
       activeOdeSystem.value.id === "potential1d" ||
       activeOdeSystem.value.id === "muscleactivation") &&
     activePlot.value.id === "phase"

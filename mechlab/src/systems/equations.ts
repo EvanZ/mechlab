@@ -116,6 +116,57 @@ export const equationsBySystemId: Record<string, EquationSpec> = {
       }
     }
   },
+  drivendampedoscillator: {
+    subtitle: "Driven damped harmonic oscillator",
+    frameworks: {
+      newtonian: {
+        sections: [
+          {
+            title: "Second-Order Equation",
+            lines: [
+              "m\\ddot{x}+c\\dot{x}+kx=F_0\\cos(\\Omega_d t+\\phi_d)",
+              "\\dot{x}=v,\\quad \\dot{v}=\\frac{F_0\\cos(\\Omega_d t+\\phi_d)-cv-kx}{m}"
+            ]
+          }
+        ]
+      },
+      lagrangian: {
+        sections: [
+          {
+            title: "Conservative Core",
+            lines: [
+              "L=\\frac12 m\\dot{x}^2-\\frac12 kx^2"
+            ]
+          },
+          {
+            title: "Generalized Forcing + Dissipation",
+            lines: [
+              "Q_{\\mathrm{drive}}=F_0\\cos(\\Omega_d t+\\phi_d),\\quad Q_{\\mathrm{damp}}=-c\\dot{x}",
+              "\\frac{d}{dt}\\left(\\frac{\\partial L}{\\partial \\dot{x}}\\right)-\\frac{\\partial L}{\\partial x}=Q_{\\mathrm{drive}}+Q_{\\mathrm{damp}}"
+            ]
+          }
+        ],
+        footnote: "Damping and external driving make this a non-conservative forced system."
+      },
+      hamiltonian: {
+        sections: [
+          {
+            title: "Hamiltonian Part",
+            lines: [
+              "p=m\\dot{x},\\quad H_0(x,p)=\\frac{p^2}{2m}+\\frac12 kx^2"
+            ]
+          },
+          {
+            title: "Non-Hamiltonian Terms",
+            lines: [
+              "\\dot{x}=\\frac{\\partial H_0}{\\partial p},\\quad \\dot{p}=-\\frac{\\partial H_0}{\\partial x}+F_0\\cos(\\Omega_d t+\\phi_d)-\\frac{c}{m}p"
+            ]
+          }
+        ],
+        footnote: "Pure Hamiltonian structure is broken by damping and explicit time-dependent driving."
+      }
+    }
+  },
   potential1d: {
     subtitle: "User-defined 1D potential V(x)",
     preferredFramework: "lagrangian",

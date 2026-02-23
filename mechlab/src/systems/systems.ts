@@ -6,6 +6,7 @@ import { doubleWellSystem } from "./ode/doublewell";
 import { doubleSlitSystem } from "./ode/doubleslit";
 import { doubleSlit2dSystem } from "./ode/doubleslit2d";
 import { doublePendulumSystem } from "./ode/doublependulum";
+import { drivenDampedOscillatorSystem } from "./ode/drivendampedoscillator";
 import { flowFieldSystem } from "./ode/flowfield";
 import { fluidParticleSystem } from "./ode/fluidparticle";
 import { navierStokes2dSystem } from "./ode/navierstokes2d";
@@ -33,6 +34,7 @@ import { brachistochroneSystem } from "./variational/brachistochrone";
 const odeSystems: OdeSystem[] = [
   pendulumSystem,
   oscillatorSystem,
+  drivenDampedOscillatorSystem,
   potential1dSystem,
   blochSphereSystem,
   twoQubitSystem,

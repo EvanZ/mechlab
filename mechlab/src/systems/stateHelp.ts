@@ -7,6 +7,10 @@ export const stateHelpBySystemId: Record<string, Record<string, string>> = {
     x: "Current position of the mass relative to center.",
     v: "Current speed of the mass."
   },
+  drivendampedoscillator: {
+    x: "Current position of the oscillator mass.",
+    v: "Current velocity of the oscillator mass."
+  },
   potential1d: {
     x: "Current particle position on the x-axis.",
     v: "Current particle speed along x."
