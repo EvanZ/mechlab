@@ -7,6 +7,7 @@ import ParamEditor from "../components/controls/ParamEditor.vue";
 import DemoCarousel from "../components/controls/DemoCarousel.vue";
 import SimControls from "../components/controls/SimControls.vue";
 import TimeScrubber from "../components/controls/TimeScrubber.vue";
+import DemoExplanationPanel from "../components/explanations/DemoExplanationPanel.vue";
 import EquationPanel from "../components/equations/EquationPanel.vue";
 import PhaseVectorFieldPanel from "../components/plots/PhaseVectorFieldPanel.vue";
 import PlotPanel from "../components/plots/PlotPanel.vue";
@@ -1329,6 +1330,8 @@ function onPresetChange(event: Event): void {
     <section class="panel viz-panel">
       <h2>Visualization</h2>
 
+      <DemoExplanationPanel :system-id="activeSystem?.id ?? null" />
+
       <section class="sim-toolbar">
         <SimControls
           :running="running"
@@ -1576,80 +1579,82 @@ function onPresetChange(event: Event): void {
     <section class="panel plots-panel">
       <h2>Plots</h2>
 
-      <template v-if="activeOdeSystem">
-        <label class="field" v-if="activeOdeSystem.plotSpec.length > 1">
-          <span class="label">Plot</span>
-          <select v-model="selectedPlotId">
-            <option v-for="plot in activeOdeSystem.plotSpec" :key="plot.id" :value="plot.id">
-              {{ plot.title }}
-            </option>
-          </select>
-        </label>
+      <div class="plots-content">
+        <template v-if="activeOdeSystem">
+          <label class="field" v-if="activeOdeSystem.plotSpec.length > 1">
+            <span class="label">Plot</span>
+            <select v-model="selectedPlotId">
+              <option v-for="plot in activeOdeSystem.plotSpec" :key="plot.id" :value="plot.id">
+                {{ plot.title }}
+              </option>
+            </select>
+          </label>
 
-        <PhaseVectorFieldPanel
-          v-if="activePlot && simulation && vectorFieldConfig"
-          :title="`${activePlot.title} ${vectorFieldConfig.titleSuffix ?? 'Vector Field'}`"
-          :x-label="activePlot.xLabel"
-          :y-label="activePlot.yLabel"
-          :rhs="activeOdeSystem.rhs"
-          :params="params"
-          :baseline-state="y0"
-          :coord-state-x-index="vectorFieldConfig.coordStateXIndex"
-          :coord-state-y-index="vectorFieldConfig.coordStateYIndex"
-          :vector-derivative-x-index="vectorFieldConfig.vectorDerivativeXIndex"
-          :vector-derivative-y-index="vectorFieldConfig.vectorDerivativeYIndex"
-          :trajectory-x="vectorFieldConfig.trajectoryX"
-          :trajectory-y="vectorFieldConfig.trajectoryY"
-        />
+          <PhaseVectorFieldPanel
+            v-if="activePlot && simulation && vectorFieldConfig"
+            :title="`${activePlot.title} ${vectorFieldConfig.titleSuffix ?? 'Vector Field'}`"
+            :x-label="activePlot.xLabel"
+            :y-label="activePlot.yLabel"
+            :rhs="activeOdeSystem.rhs"
+            :params="params"
+            :baseline-state="y0"
+            :coord-state-x-index="vectorFieldConfig.coordStateXIndex"
+            :coord-state-y-index="vectorFieldConfig.coordStateYIndex"
+            :vector-derivative-x-index="vectorFieldConfig.vectorDerivativeXIndex"
+            :vector-derivative-y-index="vectorFieldConfig.vectorDerivativeYIndex"
+            :trajectory-x="vectorFieldConfig.trajectoryX"
+            :trajectory-y="vectorFieldConfig.trajectoryY"
+          />
 
-        <PlotPanel
-          v-else-if="activePlot && simulation"
-          :spec="activePlot"
-          :t="simulation.t"
-          :y="simulation.y"
-          :energy="simulation.energy"
-          :derived="simulation.derived"
-        />
+          <PlotPanel
+            v-else-if="activePlot && simulation"
+            :spec="activePlot"
+            :t="simulation.t"
+            :y="simulation.y"
+            :energy="simulation.energy"
+            :derived="simulation.derived"
+          />
 
-        <p v-else class="placeholder">Run a simulation to render the plot.</p>
-      </template>
+          <p v-else class="placeholder">Run a simulation to render the plot.</p>
+        </template>
 
-      <template v-else-if="activeVariationalSystem">
-        <div class="stats" v-if="variationalResult">
-          <p>
-            <strong>Optimized Time:</strong>
-            {{ (variationalResult.meta.descentTime ?? Number.NaN).toFixed(5) }}
-          </p>
-          <p>
-            <strong>Straight-Line Time:</strong>
-            {{ (variationalResult.meta.straightLineTime ?? Number.NaN).toFixed(5) }}
-          </p>
-          <p>
-            <strong>Improvement:</strong>
-            {{ (variationalResult.meta.improvementPct ?? 0).toFixed(2) }}%
-          </p>
-        </div>
+        <template v-else-if="activeVariationalSystem">
+          <div class="stats" v-if="variationalResult">
+            <p>
+              <strong>Optimized Time:</strong>
+              {{ (variationalResult.meta.descentTime ?? Number.NaN).toFixed(5) }}
+            </p>
+            <p>
+              <strong>Straight-Line Time:</strong>
+              {{ (variationalResult.meta.straightLineTime ?? Number.NaN).toFixed(5) }}
+            </p>
+            <p>
+              <strong>Improvement:</strong>
+              {{ (variationalResult.meta.improvementPct ?? 0).toFixed(2) }}%
+            </p>
+          </div>
 
-        <RawPlotPanel
-          v-if="variationalResult"
-          title="Brachistochrone Curve y(x)"
-          x-label="x"
-          y-label="y"
-          :x="brachPointsX"
-          :y="brachPointsY"
-        />
+          <RawPlotPanel
+            v-if="variationalResult"
+            title="Brachistochrone Curve y(x)"
+            x-label="x"
+            y-label="y"
+            :x="brachPointsX"
+            :y="brachPointsY"
+          />
 
-        <RawPlotPanel
-          v-if="variationalResult && brachIterationX.length > 1 && brachIterationTime.length > 1"
-          title="Travel Time vs Iteration"
-          x-label="iteration"
-          y-label="time"
-          :x="brachIterationX"
-          :y="brachIterationTime"
-        />
+          <RawPlotPanel
+            v-if="variationalResult && brachIterationX.length > 1 && brachIterationTime.length > 1"
+            title="Travel Time vs Iteration"
+            x-label="iteration"
+            y-label="time"
+            :x="brachIterationX"
+            :y="brachIterationTime"
+          />
 
-        <p v-if="!variationalResult" class="placeholder">Run solve to render curve and optimization plots.</p>
-      </template>
+          <p v-if="!variationalResult" class="placeholder">Run solve to render curve and optimization plots.</p>
+        </template>
+      </div>
     </section>
   </main>
 </template>
@@ -1765,8 +1770,10 @@ select {
 }
 
 .sim-toolbar {
-  display: grid;
-  gap: 0.55rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.75rem;
   border: 1px solid #d3ddef;
   border-radius: 10px;
   background: #f9fbff;
@@ -1803,6 +1810,13 @@ select {
   display: grid;
   align-content: start;
   gap: 0.75rem;
+}
+
+.plots-content {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  min-height: 250px;
 }
 
 .stats {
